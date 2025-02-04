@@ -17,10 +17,11 @@ class PromptRefiner:
             system_instructions = (
                 "You are an AI that helps refine the user's prompt. "
                 "Ask clarifying questions or suggest improvements until the user is satisfied."
+                "If you want any further information, please ask for it."
             )
 
         # Start with a system message
-        self.conversation.append({"role": "user", "content": system_instructions})
+        self.conversation.append({"role": "developer", "content": system_instructions})
 
     def _call_ai(self, user_message=None):
         """
@@ -67,19 +68,20 @@ class PromptRefiner:
         Returns that prompt text.
         """
         final_req = (
-            "I am done refining. Please provide the final refined prompt. "
-            "Format your answer as:\nREFINED PROMPT: <my updated prompt>."
+            "I am done refining. Please provide the final refined prompt"
+            "and only the final prompt. If no feedback or refinements were given,"
+            "please just send back the original prompt."
         )
         reply = self._call_ai(final_req)
         return self._extract_refined_prompt(reply)
 
+#
+# Setup to add future refinements if required
+#
     def _extract_refined_prompt(self, ai_text):
         """
-        Looks for 'REFINED PROMPT:' line and returns the remainder. Fallback is entire text.
+        Returns the final prompt.
         """
-        for line in ai_text.splitlines():
-            if line.strip().lower().startswith("refined prompt:"):
-                return line.split(":", 1)[1].strip()
         return ai_text
 
     def _to_chatbot_pairs(self):
@@ -145,7 +147,7 @@ def add_prompt_refinement_modal(
         refine_chat_container = gr.Column()
         with refine_chat_container:
             chatbot = gr.Chatbot(label="Refinement Chat")
-            user_input = gr.Textbox(label="Your Message")
+            user_input = gr.Textbox(label="Your Message", lines=3)
             send_btn = gr.Button("Send")
             done_btn = gr.Button("Done Refining")
 

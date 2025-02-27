@@ -3,7 +3,7 @@ import os
 
 setup(
     name="PromptRefiner",
-    version="0.1.7",
+    version="0.1.8",
     packages=find_packages(),
     install_requires=[
         "gradio>=3.0",  # Adjust version based on Modal availability

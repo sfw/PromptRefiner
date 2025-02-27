@@ -54,6 +54,9 @@ class PromptRefiner:
         return self._to_chatbot_messages()
 
     def continue_refinement(self, user_message):
+        concat_user_message = (user_message + "\n\n" + 
+            "If this doesn't appease you, please ask more clarifying questions or suggest improvements. "
+            "We'll iterate until I'm satisfied, then you'll produce a final refined prompt. ")
         self._call_ai(user_message)
         return self._to_chatbot_messages()
 

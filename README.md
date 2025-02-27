@@ -1,32 +1,31 @@
-Below is a comprehensive `README.md` file for your `PromptRefiner` library, crafted based on the details provided in the `setup.py` file. This README includes an introduction, installation instructions, usage examples, configuration options, features, license information, contribution guidelines, and relevant links. It is designed to be clear, informative, and user-friendly, ensuring that both new and experienced users can understand and utilize the library effectively.
-
----
-
 # PromptRefiner
 
-PromptRefiner is a Python library designed to help users refine their prompts through iterative feedback from an AI model. It integrates seamlessly with [Gradio](https://gradio.app), providing a user-friendly modal interface for the refinement process. Whether you're crafting prompts for creative writing, technical queries, or any other purpose, PromptRefiner can assist in enhancing clarity and effectiveness.
+PromptRefiner is a Python library designed to help users refine their prompts through iterative feedback from an AI model. It integrates seamlessly with [Gradio](https://gradio.app), providing a user-friendly modal interface for the refinement process. Whether you're crafting prompts for creative writing, technical queries, or any other purpose, PromptRefiner enhances clarity and effectiveness.
 
-The library is compatible with any client that provides an interface similar to OpenAI's chat completions (e.g., with a `.chat.completions.create` method), allowing flexibility in choosing your preferred AI model.
+The library is compatible with any client that provides an interface similar to OpenAI's chat completions (e.g., with a `.chat.completions.create` method), offering flexibility in choosing your preferred AI model.
 
 ## Installation
 
-To install PromptRefiner, you need Python 3.6 or higher. Install it using pip:
+To install PromptRefiner, you need Python 3.6 or higher and Gradio 3.0 or higher (due to the `Modal` component). Install it using pip:
 
 ```bash
 pip install PromptRefiner
 ```
 
-This command will also install the required dependencies, including Gradio (version 3.0 or higher).
+**Note**: The OpenAI client (or your preferred AI client) is not bundled with PromptRefiner and must be installed separately. For example:
+
+```bash
+pip install openai
+```
 
 ## Usage
 
-To integrate PromptRefiner into your Gradio application, follow these steps:
+Here’s how to integrate PromptRefiner into your Gradio application:
 
 1. **Import the necessary components**:
 
 ```python
 import gradio as gr
-from gradio_modal import Modal
 from promptrefiner import add_prompt_refinement_modal
 from openai import OpenAI  # or your preferred client
 ```
@@ -46,8 +45,8 @@ with gr.Blocks() as demo:
         openai_client=openai_client,
         main_prompt_textbox=main_prompt,
         system_instructions="You are a helpful assistant that refines prompts.",
-        model="gpt-3.5-turbo",
-        temperature=0.7
+        model="01-mini",
+        temperature=1
     )
     submit_btn = gr.Button("Submit")
     output = gr.Textbox(label="Output")
@@ -56,44 +55,56 @@ with gr.Blocks() as demo:
 demo.launch()
 ```
 
-This example creates a Gradio interface with:
-- A textbox for entering your initial prompt.
+This creates a Gradio interface with:
+- A textbox for your initial prompt.
 - A "Refine Prompt" button that opens a modal chat interface to refine the prompt with the AI.
-- A "Submit" button to process the refined prompt (in this case, simply echoing it to an output textbox).
+- A "Submit" button to process the refined prompt (here, it simply echoes the result).
 
-When you click "Refine Prompt," a modal opens where you can interact with the AI. Once satisfied, clicking "Done Refining" updates the main prompt textbox with the refined version.
+When you click "Refine Prompt," a modal opens for AI interaction. Clicking "Done Refining" updates the main textbox with the refined prompt.
 
 ### Configuration Options
 
-Customize PromptRefiner by passing parameters to the `add_prompt_refinement_modal` function:
+Customize PromptRefiner via the `add_prompt_refinement_modal` function:
 
 - **`openai_client`**: Your AI client instance (must have a `.chat.completions.create` method).
 - **`main_prompt_textbox`**: The Gradio Textbox component for the initial prompt.
-- **`system_instructions`**: Optional custom instructions for the AI (e.g., "You are a concise editor").
-- **`model`**: The AI model to use (default: `'o1-mini'`).
-- **`temperature`**: Controls the randomness of the AI's responses (default: `1`, range: 0–2).
+- **`system_instructions`**: Optional AI behavior instructions (e.g., "You are a concise editor"). **Note**: For models without `'system'` role support, these are merged into the first user message.
+- **`model`**: The AI model (default: `'o1-mini'`). Check your client for supported models.
+- **`temperature`**: Controls response randomness (default: `1`, range: 0–2). Lower values yield more predictable outputs.
 - **`refine_button_label`**: Custom label for the refine button (default: `'Refine Prompt'`).
 
 ## Features
 
-- **Iterative Refinement**: Refine prompts step-by-step through a conversational AI interface.
-- **Gradio Integration**: Adds a modal chat interface to Gradio apps for seamless prompt editing.
-- **Flexible Configuration**: Supports custom AI models, system instructions, and response settings.
-- **Conversation History**: Automatically manages context for coherent AI responses.
-- **Simple API**: Easy to integrate into existing Gradio projects.
+- **Iterative Refinement**: Refine prompts step-by-step via a conversational AI interface.
+- **Gradio Integration**: Adds a modal chat interface to Gradio apps for seamless editing.
+- **Model Flexibility**: Automatically adapts to models lacking `'system'` message support.
+- **Conversation Context**: Maintains history for coherent multi-turn refinements.
+- **User-Friendly**: Accessible to non-technical users through an intuitive chat interface.
+
+## Model Compatibility
+
+While optimized for OpenAI models, PromptRefiner works with any similar API client. For models that don’t support `'system'` messages (e.g., "o1-mini"), the library automatically merges system instructions into the user message, ensuring compatibility without extra effort.
+
+## Troubleshooting
+
+- **BadRequestError for `'system'` roles**: The library now handles this automatically. If issues persist, verify your model name and API key.
+- **Debugging Tips**:
+  - Ensure the model is accessible via your client.
+  - Check your API key configuration.
+  - Review console output for errors.
 
 ## License
 
-PromptRefiner is released under the [MIT License](https://github.com/sfw/PromptRefiner/blob/main/LICENSE). See the LICENSE file in the repository for details.
+PromptRefiner is released under the [MIT License](https://github.com/sfw/PromptRefiner/blob/main/LICENSE).
 
 ## Contributing
 
-We welcome contributions to PromptRefiner! To get involved:
+We welcome contributions! Here’s how to get involved:
 
-- **Report Issues**: Encounter a bug or have a suggestion? Open an issue on the [GitHub repository](https://github.com/sfw/PromptRefiner/issues).
-- **Submit Pull Requests**: Want to improve the code? Fork the repo, make your changes, and submit a pull request.
+- **Report Issues**: Open an issue on the [GitHub repository](https://github.com/sfw/PromptRefiner/issues).
+- **Submit Pull Requests**: Fork the repo, make changes, and submit a pull request.
 
-Your feedback and contributions help make PromptRefiner better for everyone.
+Your input helps improve PromptRefiner for everyone.
 
 ## Links
 
@@ -103,7 +114,7 @@ Your feedback and contributions help make PromptRefiner better for everyone.
 
 ---
 
-**Note**: PromptRefiner is in early development (version 0.1.0). While functional, future updates may introduce changes. Check the repository for the latest information.
+**Note**: PromptRefiner is in early development (version 0.1.0). Check the repository for updates or contribute to its growth.
 
 ---
 

@@ -35,7 +35,7 @@ def add_prompt_refinement_modal(
 
     refine_btn = gr.Button(refine_button_label)
 
-    with gr.Modal(visible=False, allow_user_close=True) as modal:
+    with Modal(visible=False, allow_user_close=True) as modal:
         gr.Markdown("### Prompt Refinement Chat")
         with gr.Column() as refine_chat_container:
             chatbot = gr.Chatbot(label="Refinement Chat")

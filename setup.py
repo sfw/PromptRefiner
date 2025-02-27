@@ -6,6 +6,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "gradio>=3.0",  # Adjust version based on Modal availability
+        "gradio_modal"
     ],
     author="Scott Francis Winder",
     author_email="scott@hackedpodcast.com",

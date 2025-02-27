@@ -41,7 +41,7 @@ openai_client = OpenAI(api_key="your_api_key_here")
 ```python
 with gr.Blocks() as demo:
     main_prompt = gr.Textbox(label="Enter your prompt here")
-    refine_btn, components = add_prompt_refinement_modal(
+    components = add_prompt_refinement_modal(
         openai_client=openai_client,
         main_prompt_textbox=main_prompt,
         system_instructions="You are a helpful assistant that refines prompts.",

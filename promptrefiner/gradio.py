@@ -1,4 +1,5 @@
 import gradio as gr
+from gradio_modal import Modal
 
 def add_prompt_refinement_modal(
     openai_client,
